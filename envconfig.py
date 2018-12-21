@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+from base64 import b64decode
 from distutils.util import strtobool
 from uuid import UUID
 
@@ -10,7 +11,6 @@ try:
     yaml_supported = True
 except ModuleNotFoundError:
     yaml_supported = False
-
 
 try:
     import dateparser
@@ -29,8 +29,9 @@ supported_datatypes = [
 
 
 class EnvConfig(object):
-    def __init__(self, filename):
+    def __init__(self, filename, encoding='utf-8'):
         self.filename = filename
+        self.encoding = encoding
 
     def __iter__(self):
         for config_name, definition in self.read().items():
@@ -51,7 +52,10 @@ class EnvConfig(object):
 
     def parse(self, strvalue, type_):
         if type_ == 'str':
-            return strvalue
+            if strvalue.startswith('base64:'):
+                return b64decode(strvalue[7:]).decode(self.encoding)
+            else:
+                return strvalue
         elif type_ == 'int':
             return int(strvalue)
         elif type_ == 'float':

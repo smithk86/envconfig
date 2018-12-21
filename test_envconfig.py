@@ -38,6 +38,9 @@ def test_parser():
     assert conf.parse('abc', 'str') == 'abc'
     assert conf.parse('UxCcY-264RD_#aHPJNqLxkeS-_c^NydY', 'str') == 'UxCcY-264RD_#aHPJNqLxkeS-_c^NydY'
     assert conf.parse('1985019923', 'str') == '1985019923'
+    assert conf.parse('base64:a0hEISMzJmNMbX4iJFFoQ1Y2dXlIVEw3VCM9TlJLcDQ=', 'str') == 'kHD!#3&cLm~"$QhCV6uyHTL7T#=NRKp4'
+    assert conf.parse('base64:PWZCY0U2SmoqYmhqIUMjM0pjUkFtQDN2YUhWIUNiVyY=', 'str') == '=fBcE6Jj*bhj!C#3JcRAm@3vaHV!CbW&'
+    assert conf.parse('base64:fF89QCQmJCsjPStAI3wtISEhJiYmIyNfLSNeXz0qPSY=', 'str') == '|_=@$&$+#=+@#|-!!!&&&##_-#^_=*=&'
     # int
     assert conf.parse('1', 'int') == 1
     assert conf.parse('999', 'int') == 999
