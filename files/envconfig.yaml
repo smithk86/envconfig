@@ -1,0 +1,33 @@
+PYTEST_ENV_STRING1:
+  type: str
+PYTEST_ENV_STRING2:
+  type: str
+PYTEST_ENV_STRING3:
+  type: str
+PYTEST_ENV_STRING4:
+  type: str
+  default: testing123
+PYTEST_ENV_INT1:
+  type: int
+PYTEST_ENV_INT2:
+  type: int
+PYTEST_ENV_INT3:
+  type: int
+PYTEST_ENV_INT4:
+  type: int
+  default: 123
+PYTEST_ENV_BOOL1:
+  type: bool
+PYTEST_ENV_BOOL2:
+  type: bool
+PYTEST_ENV_BOOL3:
+  type: bool
+PYTEST_ENV_BOOL4:
+  type: bool
+PYTEST_ENV_BOOL5:
+  type: bool
+  default: YES
+PYTEST_ENV_UUID1:
+  type: uuid
+PYTEST_ENV_DATE1:
+  type: date
