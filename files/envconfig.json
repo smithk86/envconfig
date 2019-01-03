@@ -12,6 +12,16 @@
         "type": "str",
         "default": "testing123"
     },
+    "PYTEST_ENV_BYTES1": {
+        "type": "bytes"
+    },
+    "PYTEST_ENV_BYTES2": {
+        "type": "bytes"
+    },
+    "PYTEST_ENV_BYTES3": {
+        "type": "bytes",
+        "default": "testing123"
+    },
     "PYTEST_ENV_INT1": {
         "type": "int"
     },

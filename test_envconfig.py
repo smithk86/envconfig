@@ -41,6 +41,11 @@ def test_parser():
     assert conf.parse('base64:a0hEISMzJmNMbX4iJFFoQ1Y2dXlIVEw3VCM9TlJLcDQ=', 'str') == 'kHD!#3&cLm~"$QhCV6uyHTL7T#=NRKp4'
     assert conf.parse('base64:PWZCY0U2SmoqYmhqIUMjM0pjUkFtQDN2YUhWIUNiVyY=', 'str') == '=fBcE6Jj*bhj!C#3JcRAm@3vaHV!CbW&'
     assert conf.parse('base64:fF89QCQmJCsjPStAI3wtISEhJiYmIyNfLSNeXz0qPSY=', 'str') == '|_=@$&$+#=+@#|-!!!&&&##_-#^_=*=&'
+    # bytes
+    assert conf.parse('UxCcY-264RD_#aHPJNqLxkeS-_c^NydY', 'bytes') == b'UxCcY-264RD_#aHPJNqLxkeS-_c^NydY'
+    assert conf.parse(1985019923, 'bytes') == b'1985019923'
+    assert conf.parse('base64:VU6ODsAuKYRMV+Xgs+GuBRX5Rgtv9NUgMQKl2MILNEU=', 'bytes') == b'UN\x8e\x0e\xc0.)\x84LW\xe5\xe0\xb3\xe1\xae\x05\x15\xf9F\x0bo\xf4\xd5 1\x02\xa5\xd8\xc2\x0b4E'
+    assert conf.parse('base64:vZGWzhiQUW1eGOTjOtoWtb/zaEyD2an2KXrfxH/bXl0=', 'bytes') == b'\xbd\x91\x96\xce\x18\x90Qm^\x18\xe4\xe3:\xda\x16\xb5\xbf\xf3hL\x83\xd9\xa9\xf6)z\xdf\xc4\x7f\xdb^]'
     # int
     assert conf.parse('1', 'int') == 1
     assert conf.parse('999', 'int') == 999
@@ -97,6 +102,9 @@ def test_envconfig(filename):
     assert conf['PYTEST_ENV_STRING2'] == 'UxCcY-264RD_#aHPJNqLxkeS-_c^NydY'
     assert conf['PYTEST_ENV_STRING3'] == '74f4fae1-855d-49be-863e-c1d5050af630'
     assert conf['PYTEST_ENV_STRING4'] == 'testing123'
+    assert conf['PYTEST_ENV_BYTES1'] == b'1\xb3\xbf\xdd\xe5\xae\x92\x85\x92+\xa4.\x0b\xe6\x7f\xbc\xf4\xb5o\xa0n\xf8(\x17T&\xa6r\x0bF\x92\xfe'
+    assert conf['PYTEST_ENV_BYTES2'] == b'\xcb#\xa8U\x80\xdf9\xd2\x87\x8f\x89\x8e\x1b\x0c\xcf\x99\xd4p\xb8\xfa\x8c\x9c\xb2=\xf6\xa3\xaa\xda\xfd\x1cd\x06'
+    assert conf['PYTEST_ENV_BYTES3'] == b'testing123'
     assert conf['PYTEST_ENV_INT1'] == 1
     assert conf['PYTEST_ENV_INT2'] == 99
     assert conf['PYTEST_ENV_INT3'] == 1563234

@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='envconfig',
-    version='0.1',
+    version='0.1.2',
     description="define required properties and set via defaults or environment variables",
     author='Kyle Smith',
     author_email='smithk86@gmail.com',

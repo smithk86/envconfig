@@ -21,6 +21,7 @@ except ModuleNotFoundError:
 
 supported_datatypes = [
     'str',
+    'bytes',
     'int',
     'float',
     'bool',
@@ -52,27 +53,62 @@ class EnvConfig(object):
 
     def parse(self, strvalue, type_):
         if type_ == 'str':
-            if strvalue.startswith('base64:'):
-                return b64decode(strvalue[7:]).decode(self.encoding)
-            else:
-                return strvalue
+            return EnvConfig._parse_string(strvalue, encoding=self.encoding)
+        elif type_ == 'bytes':
+            return EnvConfig._parse_bytes(strvalue, encoding=self.encoding)
         elif type_ == 'int':
-            return int(strvalue)
+            return EnvConfig._parse_int(strvalue)
         elif type_ == 'float':
-            return float(strvalue)   
+            return EnvConfig._parse_float(strvalue)
         if type_ == 'bool':
-            if type(strvalue) is str:
-                return bool(strtobool(strvalue))
-            else:
-                return bool(strvalue)
+            return EnvConfig._parse_bool(strvalue)
         elif type_ == 'uuid':
-            return UUID(strvalue)
+            return EnvConfig._parse_uuid(strvalue)
         elif type_ == 'date':
-            if date_supported is False:
-                raise ValueError('dateparser is not available; please run "pip install dateparser"')
-            return dateparser.parse(strvalue)
+            return EnvConfig._parse_date(strvalue)
         else:
             raise ValueError(f"datatype not supported: {type_} [supported={','.join(supported_datatypes)}")
+
+    @staticmethod
+    def _parse_string(strvalue, encoding='utf-8'):
+        strvalue = str(strvalue)
+        if strvalue.startswith('base64:'):
+            return b64decode(strvalue[7:]).decode(encoding)
+        else:
+            return strvalue
+
+    @staticmethod
+    def _parse_bytes(strvalue, encoding='utf-8'):
+        strvalue = str(strvalue)
+        if strvalue.startswith('base64:'):
+            return b64decode(strvalue[7:])
+        else:
+            return strvalue.encode(encoding)
+
+    @staticmethod
+    def _parse_int(strvalue):
+        return int(strvalue)
+
+    @staticmethod
+    def _parse_float(strvalue):
+        return float(strvalue)
+
+    @staticmethod
+    def _parse_bool(strvalue):
+        if type(strvalue) is str:
+            return bool(strtobool(strvalue))
+        else:
+            return bool(strvalue)
+
+    @staticmethod
+    def _parse_uuid(strvalue):
+        return UUID(strvalue)
+
+    @staticmethod
+    def _parse_date(strvalue):
+        if date_supported is False:
+            raise ValueError('dateparser is not available; please run "pip install dateparser"')
+        return dateparser.parse(strvalue)
 
     def read(self):
         with open(self.filename, 'r') as fh:
