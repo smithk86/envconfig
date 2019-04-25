@@ -30,9 +30,10 @@ supported_datatypes = [
 
 
 class EnvConfig(object):
-    def __init__(self, filename, encoding='utf-8'):
+    def __init__(self, filename, encoding='utf-8', yaml_loader='SafeLoader'):
         self.filename = filename
         self.encoding = encoding
+        self.yaml_loader = yaml_loader
 
     def __iter__(self):
         for config_name, definition in self.read().items():
@@ -117,7 +118,8 @@ class EnvConfig(object):
         if self.filename.endswith('.yaml'):
             if yaml_supported is False:
                 raise ValueError('pyyaml is not available; please run "pip install pyyaml"')
-            return yaml.load(data)
+            yaml_loader = getattr(yaml, self.yaml_loader) if self.yaml_loader else None
+            return yaml.load(data, Loader=yaml_loader)
         elif self.filename.endswith('.json'):
             return json.loads(data)
         else:
