@@ -6,6 +6,10 @@ from base64 import b64decode
 from distutils.util import strtobool
 from uuid import UUID
 
+
+__version__ = '0.2.0'
+
+
 try:
     import yaml
     yaml_supported = True
@@ -19,28 +23,30 @@ except ModuleNotFoundError:
     date_supported = False
 
 
-supported_datatypes = [
-    'str',
-    'bytes',
-    'int',
-    'float',
-    'bool',
-    'uuid',
-    'date'
-]
+class EnvProps(object):
+    supported_datatypes = [
+        'str',
+        'bytes',
+        'int',
+        'float',
+        'bool',
+        'uuid',
+        'date'
+    ]
 
-
-class EnvConfig(object):
     def __init__(self, filename, encoding='utf-8', yaml_loader='SafeLoader'):
         self.filename = filename
         self.encoding = encoding
         self.yaml_loader = yaml_loader
 
     def __iter__(self):
-        for config_name, definition in self.read().items():
+        data = self.read()
+        if 'properties' not in data:
+            raise ValueError('the "properties" key is missing')
+        for config_name, definition in data['properties'].items():
             yield (config_name, self.value(config_name, definition))
 
-    def to_dict(self):
+    def asdict(self):
         return dict(self)
 
     def value(self, config_name, definition):
@@ -55,21 +61,21 @@ class EnvConfig(object):
 
     def parse(self, strvalue, type_):
         if type_ == 'str':
-            return EnvConfig._parse_string(strvalue, encoding=self.encoding)
+            return EnvProps._parse_string(strvalue, encoding=self.encoding)
         elif type_ == 'bytes':
-            return EnvConfig._parse_bytes(strvalue, encoding=self.encoding)
+            return EnvProps._parse_bytes(strvalue, encoding=self.encoding)
         elif type_ == 'int':
-            return EnvConfig._parse_int(strvalue)
+            return EnvProps._parse_int(strvalue)
         elif type_ == 'float':
-            return EnvConfig._parse_float(strvalue)
+            return EnvProps._parse_float(strvalue)
         if type_ == 'bool':
-            return EnvConfig._parse_bool(strvalue)
+            return EnvProps._parse_bool(strvalue)
         elif type_ == 'uuid':
-            return EnvConfig._parse_uuid(strvalue)
+            return EnvProps._parse_uuid(strvalue)
         elif type_ == 'date':
-            return EnvConfig._parse_date(strvalue)
+            return EnvProps._parse_date(strvalue)
         else:
-            raise ValueError(f"datatype not supported: {type_} [supported={','.join(supported_datatypes)}")
+            raise ValueError(f"datatype not supported: {type_} [supported={','.join(EnvProps.supported_datatypes)}]")
 
     @staticmethod
     def _parse_string(strvalue, encoding='utf-8'):

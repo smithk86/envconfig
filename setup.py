@@ -1,17 +1,33 @@
 #!/usr/bin/env python
 
-from setuptools import setup, find_packages
+import os.path
+
+from setuptools import setup
+
+
+dir_ = os.path.abspath(os.path.dirname(__file__))
+# get the version to include in setup()
+with open(f'{dir_}/envprops.py') as fh:
+    for line in fh:
+        if '__version__' in line:
+            exec(line)
+# get long description from README.md
+with open(f'{dir_}/README.md') as fh:
+    long_description = fh.read()
+
 
 setup(
-    name='envconfig',
-    version='0.1.3',
-    description="define required properties and set via defaults or environment variables",
+    name='pyenvprops',
+    version=__version__,
+    license='MIT',
     author='Kyle Smith',
     author_email='smithk86@gmail.com',
-    url='https://github.com/smithk86/envconfig',
-    py_modules=['envconfig'],
+    url='https://github.com/smithk86/envprops',
+    py_modules=['envprops'],
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     extras_require={
-        'yaml':  ['PyYAML==5.1'],
-        'dateparser': ['dateparser==0.7.0'],
+        'yaml': ['PyYAML'],
+        'date': ['dateparser'],
     }
 )

@@ -5,7 +5,7 @@ from uuid import UUID
 import pytest
 import pytz
 
-from envconfig import EnvConfig
+from envprops import EnvProps
 
 
 dir_ = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +34,7 @@ def environment():
 
 
 def test_parser():
-    conf = EnvConfig(filename='not_a_file.nul')
+    conf = EnvProps(filename='not_a_file.nul')
     # str
     assert conf.parse('abc', 'str') == 'abc'
     assert conf.parse('UxCcY-264RD_#aHPJNqLxkeS-_c^NydY', 'str') == 'UxCcY-264RD_#aHPJNqLxkeS-_c^NydY'
@@ -70,21 +70,27 @@ def test_parser():
     assert conf.parse('2018-01-01', 'date') == datetime(2018, 1, 1, 0, 0, 0)
     assert conf.parse('1994-11-05T08:15:30.123456-05:00', 'date') == datetime(1994, 11, 5, 8, 15, 30, 123456, tzinfo=pytz.timezone('Etc/GMT+5'))
 
+    # test bad type
+    with pytest.raises(ValueError) as excinfo:
+        conf.parse('bad value', 'strr')
+    assert str(excinfo.value) == 'datatype not supported: strr [supported=str,bytes,int,float,bool,uuid,date]'
+
 
 def test_values():
-    conf = EnvConfig(filename='not_a_file.nul')
+    conf = EnvProps(filename='not_a_file.nul')
     assert conf.value('PYTEST_ENV_STRING1', {'type': 'str'}) == 'abc'
     assert conf.value('PYTEST_ENV_STRINGZ', {'type': 'str', 'default': 'abc'}) == 'abc'
-    with pytest.raises(ValueError, message='no config value has been defined for "PYTEST_ENV_STRING_DOESNOTEXIST"'):
+    with pytest.raises(ValueError) as excinfo:
         assert conf.value('PYTEST_ENV_STRING_DOESNOTEXIST', {'type': 'str'}) == 'abc'
+    assert str(excinfo.value) == 'no config value has been defined for "PYTEST_ENV_STRING_DOESNOTEXIST"'
 
 
 @pytest.mark.parametrize('filename', [
-    f'{dir_}/files/envconfig.json',
-    f'{dir_}/files/envconfig.yaml'
+    f'{dir_}/files/properties.json',
+    f'{dir_}/files/properties.yaml'
 ])
 def test_envconfig(filename):
-    conf = EnvConfig(filename)
+    conf = EnvProps(filename)
     conf_dict = conf.read()
     assert isinstance(conf_dict, dict)
     for name, definition in conf_dict.items():
@@ -94,11 +100,11 @@ def test_envconfig(filename):
 
 
 @pytest.mark.parametrize('filename', [
-    f'{dir_}/files/envconfig.json',
-    f'{dir_}/files/envconfig.yaml'
+    f'{dir_}/files/properties.json',
+    f'{dir_}/files/properties.yaml'
 ])
 def test_envconfig(filename):
-    conf = EnvConfig(filename).to_dict()
+    conf = EnvProps(filename).asdict()
     assert conf['PYTEST_ENV_STRING1'] == 'abc'
     assert conf['PYTEST_ENV_STRING2'] == 'UxCcY-264RD_#aHPJNqLxkeS-_c^NydY'
     assert conf['PYTEST_ENV_STRING3'] == '74f4fae1-855d-49be-863e-c1d5050af630'
