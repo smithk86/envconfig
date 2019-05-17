@@ -24,6 +24,7 @@ setup(
     author_email='smithk86@gmail.com',
     url='https://github.com/smithk86/envprops',
     py_modules=['envprops'],
+    description='define and set application properties using a file and enviornment variables',
     long_description=long_description,
     long_description_content_type='text/markdown',
     extras_require={
