@@ -25,7 +25,8 @@ supported_datatypes = [
     'int',
     'float',
     'bool',
-    'uuid'
+    'uuid',
+    'date'
 ]
 
 

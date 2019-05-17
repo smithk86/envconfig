@@ -38,3 +38,5 @@ PYTEST_ENV_UUID1:
   type: uuid
 PYTEST_ENV_DATE1:
   type: date
+PYTEST_ENV_DATE2:
+  type: date

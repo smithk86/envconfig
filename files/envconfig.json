@@ -56,5 +56,8 @@
     },
     "PYTEST_ENV_DATE1": {
         "type": "date"
+    },
+    "PYTEST_ENV_DATE2": {
+        "type": "date"
     }
 }
