@@ -5,7 +5,7 @@ from uuid import UUID
 import pytest
 import pytz
 
-from envprops import EnvProps
+from envprops import EnvProps, EnvPropsParseError
 
 
 dir_ = os.path.dirname(os.path.abspath(__file__))
@@ -124,3 +124,14 @@ def test_envconfig(filename):
     assert conf['PYTEST_ENV_UUID1'] == UUID('340ab29e-7df0-4f63-bd61-31efcb1c2dcf')
     assert conf['PYTEST_ENV_DATE1'] == datetime(1999, 10, 20, 0, 0)
     assert conf['PYTEST_ENV_DATE2'] == datetime(2015, 1, 1, 12, tzinfo=pytz.timezone('Etc/GMT+5'))
+
+
+def test_parse_error():
+    conf = EnvProps(filename='not_a_file.nul')
+    # str
+    with pytest.raises(EnvPropsParseError) as excinfo:
+        conf.value('PYTEST_ENV_STRING1', {'type': 'int'})
+    assert excinfo.value.config_name == 'PYTEST_ENV_STRING1'
+    assert excinfo.value.type == 'int'
+    assert excinfo.value.value == 'abc'
+    assert type(excinfo.value.exception) == ValueError

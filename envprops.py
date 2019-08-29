@@ -7,7 +7,7 @@ from distutils.util import strtobool
 from uuid import UUID
 
 
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 
 
 try:
@@ -21,6 +21,15 @@ try:
     date_supported = True
 except ModuleNotFoundError:
     date_supported = False
+
+
+class EnvPropsParseError(Exception):
+    def __init__(self, config_name, type_, value, exception):
+        self.config_name = config_name
+        self.type = type_
+        self.value = value
+        self.exception = exception
+        super().__init__(f'value could not be parsed:\nconfig_name: {self.config_name}\ntype: {self.type}\nvalue: {self.value}\nexception: {type(self.exception).__name__}: {self.exception}')
 
 
 class EnvProps(object):
@@ -57,7 +66,10 @@ class EnvProps(object):
         if strvalue is None:
             raise ValueError(f'no config value has been defined for "{config_name}"')
         else:
-            return self.parse(strvalue, definition['type'])
+            try:
+                return self.parse(strvalue, definition['type'])
+            except Exception as e:
+                raise EnvPropsParseError(config_name, definition['type'], strvalue, e)
 
     def parse(self, strvalue, type_):
         if type_ == 'str':
