@@ -9,7 +9,7 @@ dir_ = os.path.abspath(os.path.dirname(__file__))
 # get the version to include in setup()
 with open(f'{dir_}/envprops.py') as fh:
     for line in fh:
-        if '__version__' in line:
+        if '__VERSION__' in line:
             exec(line)
 # get long description from README.md
 with open(f'{dir_}/README.md') as fh:

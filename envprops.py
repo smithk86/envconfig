@@ -7,7 +7,8 @@ from distutils.util import strtobool
 from uuid import UUID
 
 
-__version__ = '0.3.0'
+__VERSION__ = '0.3.1-dev'
+__DATE__ = '2020-07-23'
 
 
 try:
@@ -34,13 +35,13 @@ class EnvPropsParseError(Exception):
 
 class EnvProps(object):
     supported_datatypes = [
-        'str',
-        'bytes',
-        'int',
-        'float',
         'bool',
-        'uuid',
-        'date'
+        'bytes',
+        'date',
+        'float',
+        'int',
+        'str',
+        'uuid'
     ]
 
     def __init__(self, filename, encoding='utf-8', yaml_loader='SafeLoader'):
