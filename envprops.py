@@ -7,7 +7,7 @@ from distutils.util import strtobool
 from uuid import UUID
 
 
-__VERSION__ = '0.3.1-dev'
+__VERSION__ = '0.3.1'
 __DATE__ = '2020-07-23'
 
 
@@ -40,6 +40,7 @@ class EnvProps(object):
         'date',
         'float',
         'int',
+        'json',
         'str',
         'uuid'
     ]
@@ -73,20 +74,22 @@ class EnvProps(object):
                 raise EnvPropsParseError(config_name, definition['type'], strvalue, e)
 
     def parse(self, strvalue, type_):
-        if type_ == 'str':
-            return EnvProps._parse_string(strvalue, encoding=self.encoding)
-        elif type_ == 'bytes':
-            return EnvProps._parse_bytes(strvalue, encoding=self.encoding)
-        elif type_ == 'int':
-            return EnvProps._parse_int(strvalue)
-        elif type_ == 'float':
-            return EnvProps._parse_float(strvalue)
         if type_ == 'bool':
             return EnvProps._parse_bool(strvalue)
-        elif type_ == 'uuid':
-            return EnvProps._parse_uuid(strvalue)
+        elif type_ == 'bytes':
+            return EnvProps._parse_bytes(strvalue, encoding=self.encoding)
         elif type_ == 'date':
             return EnvProps._parse_date(strvalue)
+        elif type_ == 'float':
+            return EnvProps._parse_float(strvalue)
+        elif type_ == 'int':
+            return EnvProps._parse_int(strvalue)
+        elif type_ == 'json':
+            return EnvProps._parse_json(strvalue)
+        elif type_ == 'str':
+            return EnvProps._parse_string(strvalue, encoding=self.encoding)
+        elif type_ == 'uuid':
+            return EnvProps._parse_uuid(strvalue)
         else:
             raise ValueError(f"datatype not supported: {type_} [supported={','.join(EnvProps.supported_datatypes)}]")
 
@@ -124,6 +127,10 @@ class EnvProps(object):
     @staticmethod
     def _parse_uuid(strvalue):
         return UUID(strvalue)
+
+    @staticmethod
+    def _parse_json(strvalue):
+        return json.loads(strvalue)
 
     @staticmethod
     def _parse_date(strvalue):

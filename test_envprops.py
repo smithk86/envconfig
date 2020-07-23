@@ -29,6 +29,7 @@ def environment():
         assert 'PYTEST_ENV_UUID1' in env_keys
         assert 'PYTEST_ENV_DATE1' in env_keys
         assert 'PYTEST_ENV_DATE2' in env_keys
+        assert 'PYTEST_ENV_JSON1' in env_keys
     except Exception:
         raise RuntimeError('please source files/pytest.env before running tests')
 
@@ -69,11 +70,13 @@ def test_parser():
     # date
     assert conf.parse('2018-01-01', 'date') == datetime(2018, 1, 1, 0, 0, 0)
     assert conf.parse('1994-11-05T08:15:30.123456-05:00', 'date') == datetime(1994, 11, 5, 8, 15, 30, 123456, tzinfo=pytz.timezone('Etc/GMT+5'))
+    # json
+    assert conf.parse('{"value1": 1, "value2": "2"}', 'json') == {'value1': 1, 'value2': '2'}
 
     # test bad type
     with pytest.raises(ValueError) as excinfo:
         conf.parse('bad value', 'strr')
-    assert str(excinfo.value) == 'datatype not supported: strr [supported=str,bytes,int,float,bool,uuid,date]'
+    assert str(excinfo.value) == 'datatype not supported: strr [supported=bool,bytes,date,float,int,json,str,uuid]'
 
 
 def test_values():
@@ -124,7 +127,7 @@ def test_envconfig(filename):
     assert conf['PYTEST_ENV_UUID1'] == UUID('340ab29e-7df0-4f63-bd61-31efcb1c2dcf')
     assert conf['PYTEST_ENV_DATE1'] == datetime(1999, 10, 20, 0, 0)
     assert conf['PYTEST_ENV_DATE2'] == datetime(2015, 1, 1, 12, tzinfo=pytz.timezone('Etc/GMT+5'))
-
+    assert conf['PYTEST_ENV_JSON1'] == {'value1': 1, 'value2': '2'}
 
 def test_parse_error():
     conf = EnvProps(filename='not_a_file.nul')

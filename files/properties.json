@@ -60,6 +60,9 @@
         },
         "PYTEST_ENV_DATE2": {
             "type": "date"
+        },
+        "PYTEST_ENV_JSON1": {
+            "type": "json"
         }
     }
 }
