@@ -18,7 +18,7 @@ with open(f'{dir_}/README.md') as fh:
 
 setup(
     name='pyenvprops',
-    version=__version__,
+    version=__VERSION__,
     license='MIT',
     author='Kyle Smith',
     author_email='smithk86@gmail.com',
