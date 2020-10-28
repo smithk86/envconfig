@@ -7,7 +7,7 @@ from distutils.util import strtobool
 from uuid import UUID
 
 
-__VERSION__ = '0.3.2-dev'
+__VERSION__ = '0.3.2'
 __DATE__ = '2020-10-28'
 
 
