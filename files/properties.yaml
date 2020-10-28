@@ -43,3 +43,6 @@ properties:
     type: date
   PYTEST_ENV_JSON1:
     type: json
+  PYTEST_ENV_TEST_REQUIRED:
+    type: str
+    required: false

@@ -128,6 +128,8 @@ def test_envconfig(filename):
     assert conf['PYTEST_ENV_DATE1'] == datetime(1999, 10, 20, 0, 0)
     assert conf['PYTEST_ENV_DATE2'] == datetime(2015, 1, 1, 12, tzinfo=pytz.timezone('Etc/GMT+5'))
     assert conf['PYTEST_ENV_JSON1'] == {'value1': 1, 'value2': '2'}
+    assert conf['PYTEST_ENV_TEST_REQUIRED'] is None
+
 
 def test_parse_error():
     conf = EnvProps(filename='not_a_file.nul')
