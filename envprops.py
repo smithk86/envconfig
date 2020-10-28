@@ -7,8 +7,8 @@ from distutils.util import strtobool
 from uuid import UUID
 
 
-__VERSION__ = '0.3.1'
-__DATE__ = '2020-07-23'
+__VERSION__ = '0.3.2-dev'
+__DATE__ = '2020-10-28'
 
 
 try:
@@ -65,8 +65,13 @@ class EnvProps(object):
         strvalue = definition.get('default')
         # attempt to get value from environment but default to the default value
         strvalue = os.environ.get(config_name, strvalue)
+        # is this value required?
+        required = definition.get('required', True)
         if strvalue is None:
-            raise ValueError(f'no config value has been defined for "{config_name}"')
+            if required is False:
+                return None
+            else:
+                raise ValueError(f'no config value has been defined for "{config_name}"')
         else:
             try:
                 return self.parse(strvalue, definition['type'])
